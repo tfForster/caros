@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:window_manager/window_manager.dart';
 import '/config/app.dart';
-import '/pages/home.dart';
+import 'pages/apps.dart';
 
 
 void main() async {
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       darkTheme: ThemeData.dark(),
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage()
+        '/': (context) => const AppsPage()
       },
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
