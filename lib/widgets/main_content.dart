@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/config/app.dart';
 
 class MainContent extends StatelessWidget {
   final Map<String, String> settings;
@@ -8,38 +9,28 @@ class MainContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(24),
       child: Row(
         children: [
-          // Left content (descriptions and values)
           Expanded(
             flex: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: settings.entries
-                  .map((entry) => _buildDataRow(entry.key, entry.value))
-                  .toList(),
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: settings.entries.map((e) => _buildStatCard(e.key, e.value)).toList(),
             ),
           ),
-          // Right content (drivetrain 3D model/image)
+          const SizedBox(width: 24),
           Expanded(
-            flex: 3,
-            child: Center(
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.red[800],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.directions_car,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                ),
+            flex: 2,
+            child: Container(
+              decoration: BoxDecoration(
+                color: App.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: App.border),
+              ),
+              child: const Center(
+                child: Icon(Icons.directions_car, size: 100, color: Color(0xFF2A2A2A)),
               ),
             ),
           ),
@@ -48,35 +39,21 @@ class MainContent extends StatelessWidget {
     );
   }
 
-  Widget _buildDataRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildStatCard(String label, String value) {
+    return Container(
+      width: 160,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: App.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: App.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 3,
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 18,
-                color: Colors.red,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          Text(label, style: const TextStyle(color: Colors.white38, fontSize: 11, letterSpacing: 0.5)),
+          const SizedBox(height: 6),
+          Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600)),
         ],
       ),
     );

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/pages/phone.dart';
 import '../pages/apps.dart';
-import '../pages/srtpage.dart';
 import '/pages/media.dart';
-import '/pages/controls.dart';
-import '/pages/climate.dart';
+import '/pages/nav.dart';
+import '/pages/phone.dart';
 import '/pages/settings.dart';
+import '/config/app.dart';
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final String currentPage;
@@ -14,41 +13,68 @@ class BottomNavigationBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.red[900],
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildBottomButton(context, Icons.music_note, 'Media', const MediaPage()),
-          _buildBottomButton(context, Icons.thermostat, 'Climate', const ClimatePage()),
-          _buildBottomButton(context, Icons.tune, 'Controls', const ControlsPage()),
-          _buildBottomButton(context, Icons.apps, 'Apps', const AppsPage()),
-          _buildBottomButton(context, Icons.radio, 'SRT Page', const SrtPage()),
-          _buildBottomButton(context, Icons.phone, 'Phone', const PhonePage()),
-          _buildBottomButton(context, Icons.settings, 'Settings', const SettingsPage()),
-        ],
-      ),
-    );
-  }
+    const items = [
+      {'icon': Icons.apps,       'label': 'Apps'},
+      {'icon': Icons.music_note, 'label': 'Media'},
+      {'icon': Icons.phone,      'label': 'Phone'},
+      {'icon': Icons.map,        'label': 'Nav'},
+      {'icon': Icons.settings,   'label': 'Settings'},
+    ];
 
-  Widget _buildBottomButton(BuildContext context, IconData icon, String label, Widget targetPage) {
-    final isSelected = label == currentPage;
+    final pages = {
+      'Apps':     const AppsPage(),
+      'Media':    const MediaPage(),
+      'Phone':    const PhonePage(),
+      'Nav':      const NavPage(),
+      'Settings': const SettingsPage(),
+    };
 
-    return IconButton(
-      onPressed: () {
-        if (!isSelected) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => targetPage),
-          );
-        }
-      },
-      icon: Icon(
-        icon,
-        size: 30,
-        color: isSelected ? Colors.white : Colors.grey[400],
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xFF0F0F0F),
+        border: Border(top: BorderSide(color: Color(0xFF1E1E1E))),
       ),
-      tooltip: label,
+      child: SafeArea(
+        child: SizedBox(
+          height: 56,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: items.map((item) {
+              final label = item['label'] as String;
+              final icon  = item['icon']  as IconData;
+              final isSelected = label == currentPage;
+
+              return Expanded(
+                child: InkWell(
+                  onTap: () {
+                    if (!isSelected && pages.containsKey(label)) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => pages[label]!),
+                      );
+                    }
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(icon, size: 22, color: isSelected ? App.accent : Colors.white38),
+                      const SizedBox(height: 3),
+                      Text(
+                        label,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: isSelected ? App.accent : Colors.white38,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
     );
   }
 }

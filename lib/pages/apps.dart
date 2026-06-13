@@ -1,186 +1,109 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/pages/climate.dart';
-import 'package:test_app/pages/controls.dart';
-import 'package:test_app/pages/nav.dart';
-import 'package:test_app/pages/phone.dart';
-import 'package:test_app/pages/settings.dart';
+import '/config/app.dart';
 import '/widgets/bottom_navigation.dart';
-import 'srtpage.dart'; // Example page import
-import '/pages/media.dart'; // Another example page
+import 'media.dart';
+import 'nav.dart';
+import 'phone.dart';
+import 'settings.dart';
 
-class AppsPage extends StatefulWidget {
+class AppsPage extends StatelessWidget {
   const AppsPage({super.key});
 
-  @override
-  _AppsPageState createState() => _AppsPageState();
-}
+  static const _apps = [
+    {'icon': Icons.music_note,     'label': 'Media',       'route': 'Media'},
+    {'icon': Icons.phone,          'label': 'Phone',       'route': 'Phone'},
+    {'icon': Icons.map,            'label': 'Navigation',  'route': 'Nav'},
+    {'icon': Icons.settings,       'label': 'Settings',    'route': 'Settings'},
+    {'icon': Icons.directions_car, 'label': 'Travel Link', 'route': null},
+    {'icon': Icons.insights,       'label': 'Performance', 'route': null},
+    {'icon': Icons.notifications,  'label': 'Alerts',      'route': null},
+    {'icon': Icons.camera_alt,     'label': 'Kamera',      'route': null},
+    {'icon': Icons.wb_sunny,       'label': 'Wetter',      'route': null},
+    {'icon': Icons.local_gas_station, 'label': 'Tankstellen', 'route': null},
+    {'icon': Icons.restaurant,     'label': 'POI',         'route': null},
+    {'icon': Icons.battery_charging_full, 'label': 'Fahrzeug', 'route': null},
+  ];
 
-class _AppsPageState extends State<AppsPage> {
-  final PageController _pageController = PageController(initialPage: 0);
-  int _currentPage = 0;
-
-  // Define app-specific pages
-  final Map<String, Widget> appPages = {
-    'SRT page': SrtPage(), // Replace with your page widget
-    'Media': MediaPage(),         // Replace with your page widget
-    'Climate': ClimatePage(),     // Replace with actual pages
-    'Controls': ControlsPage(),
-    'Nav': NavPage(),
-    'Phone': PhonePage(),
-    'Settings': SettingsPage(),
-    // Add additional apps here
+  static final _pages = <String, Widget>{
+    'Media':    const MediaPage(),
+    'Phone':    const PhonePage(),
+    'Nav':      const NavPage(),
+    'Settings': const SettingsPage(),
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: App.bg,
       appBar: AppBar(
-        title: const Text('Apps'),
-        backgroundColor: Colors.red[900],
+        backgroundColor: App.bg,
+        elevation: 0,
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Apps', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
+            Text('5:00', style: TextStyle(color: Colors.white54, fontSize: 15)),
+          ],
+        ),
       ),
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },
-              children: [
-                _buildAppGrid(context, 1), // First page of apps
-                _buildAppGrid(context, 2), // Second page of apps
-              ],
-            ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 1.1,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: _currentPage > 0 ? Colors.white : Colors.grey,
-                ),
-                onPressed: _currentPage > 0
-                    ? () {
-                        _pageController.previousPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    : null,
-              ),
-              Text(
-                'Page ${_currentPage + 1} of 2',
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.arrow_forward,
-                  color: _currentPage < 1 ? Colors.white : Colors.grey,
-                ),
-                onPressed: _currentPage < 1
-                    ? () {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      }
-                    : null,
-              ),
-            ],
-          ),
-        ],
+          itemCount: _apps.length,
+          itemBuilder: (context, index) => _buildAppTile(context, _apps[index]),
+        ),
       ),
       bottomNavigationBar: const BottomNavigationBarWidget(currentPage: 'Apps'),
     );
   }
 
-  Widget _buildAppGrid(BuildContext context, int page) {
-    final List<List<Map<String, dynamic>>> pages = [
-      [
-        {'icon': Icons.directions_car, 'label': 'Travel Link'},
-        {'icon': Icons.speed, 'label': 'SRT Mode'},
-        {'icon': Icons.dashboard, 'label': 'Dashboard'},
-        {'icon': Icons.music_note, 'label': 'Media'},
-        {'icon': Icons.thermostat, 'label': 'Climate'},
-        {'icon': Icons.control_camera, 'label': 'Controls'},
-        {'icon': Icons.navigation, 'label': 'Nav'},
-        {'icon': Icons.phone, 'label': 'Phone'},
-        {'icon': Icons.settings, 'label': 'Settings'},
-      ],
-      [
-        {'icon': Icons.notifications, 'label': 'Notifications'},
-        {'icon': Icons.insights, 'label': 'Performance Pages'},
-        {'icon': Icons.apps, 'label': 'App Manager'},
-        {'icon': Icons.wheelchair_pickup, 'label': 'Heated Wheel'},
-        {'icon': Icons.auto_awesome, 'label': 'Mirror Dimmer'},
-        {'icon': Icons.music_note, 'label': 'Media'},
-        {'icon': Icons.thermostat, 'label': 'Climate'},
-        {'icon': Icons.control_camera, 'label': 'Controls'},
-        {'icon': Icons.navigation, 'label': 'Nav'},
-        {'icon': Icons.phone, 'label': 'Phone'},
-        {'icon': Icons.settings, 'label': 'Settings'},
-        {'icon': Icons.volume_up, 'label': 'Audio Settings'},
-      ],
-    ];
+  Widget _buildAppTile(BuildContext context, Map<String, dynamic> app) {
+    final hasPage = app['route'] != null;
 
-    final apps = pages[page - 1];
-
-    return GridView.builder(
-      padding: const EdgeInsets.all(8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 5,
-        crossAxisSpacing: 8,
-        childAspectRatio: 1.4,
-      ),
-      itemCount: apps.length,
-      itemBuilder: (context, index) {
-        final app = apps[index];
-        return GestureDetector(
-          onTap: () {
-            if (appPages.containsKey(app['label'])) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => appPages[app['label']]!),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${app['label']} page is not available yet!'),
-                ),
-              );
-            }
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Colors.grey[800],
-                child: Icon(
-                  app['icon'],
-                  size: 26,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                app['label'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
+    return GestureDetector(
+      onTap: () {
+        final route = app['route'] as String?;
+        if (route != null && _pages.containsKey(route)) {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => _pages[route]!));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${app['label']} — demnächst verfügbar'),
+              backgroundColor: App.surface,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
       },
+      child: Container(
+        decoration: BoxDecoration(
+          color: App.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: App.border),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(app['icon'] as IconData, size: 28, color: hasPage ? App.accent : Colors.white38),
+            const SizedBox(height: 8),
+            Text(
+              app['label'] as String,
+              style: TextStyle(
+                color: hasPage ? Colors.white : Colors.white38,
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

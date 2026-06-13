@@ -4,7 +4,6 @@ import '/widgets/drive_mode_buttons.dart';
 import '/widgets/main_content.dart';
 import '/widgets/bottom_navigation.dart';
 
-
 class SrtPage extends StatefulWidget {
   const SrtPage({super.key});
 
@@ -13,65 +12,66 @@ class SrtPage extends StatefulWidget {
 }
 
 class _SrtPageState extends State<SrtPage> {
-  String selectedMode = 'Track'; // Default selected mode
+  String selectedMode = 'Komfort';
 
   final Map<String, Map<String, String>> driveModeSettings = {
-    'Track': {
-      'Horsepower': '700+',
-      'Transmission': 'Track',
-      'Paddle Shift': 'On',
-      'Traction': 'Track',
-      'Suspension': 'Track',
+    'Komfort': {
+      'Fahrwerk':         'Komfort',
+      'Lenkung':          'Leicht',
+      'Traktion':         'Standard',
+      'Getriebe':         'Automatik',
+      'Gasannahme':       'Sanft',
     },
     'Sport': {
-      'Horsepower': '700+',
-      'Transmission': 'Sport',
-      'Paddle Shift': 'On',
-      'Traction': 'Sport',
-      'Suspension': 'Sport',
+      'Fahrwerk':         'Straff',
+      'Lenkung':          'Direkt',
+      'Traktion':         'Sport',
+      'Getriebe':         'Manuell',
+      'Gasannahme':       'Sportlich',
+    },
+    'Sport+': {
+      'Fahrwerk':         'Sehr straff',
+      'Lenkung':          'Sehr direkt',
+      'Traktion':         'Aus',
+      'Getriebe':         'Manuell',
+      'Gasannahme':       'Direkt',
     },
     'Custom': {
-      'Horsepower': 'Varies',
-      'Transmission': 'Custom',
-      'Paddle Shift': 'On/Off',
-      'Traction': 'Custom',
-      'Suspension': 'Custom',
-    },
-    'Default': {
-      'Horsepower': '700+',
-      'Transmission': 'Street',
-      'Paddle Shift': 'On',
-      'Traction': 'Street',
-      'Suspension': 'Street',
+      'Fahrwerk':         'Individuell',
+      'Lenkung':          'Individuell',
+      'Traktion':         'Individuell',
+      'Getriebe':         'Individuell',
+      'Gasannahme':       'Individuell',
     },
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: App.bg,
       appBar: AppBar(
-        title: Text(App.title),
-        centerTitle: true,
-        backgroundColor: Colors.red[900],
+        backgroundColor: App.bg,
+        elevation: 0,
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Fahrmodus', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
+            Text('5:00', style: TextStyle(color: Colors.white54, fontSize: 15)),
+          ],
+        ),
       ),
       body: Column(
         children: [
           DriveModeButtons(
             selectedMode: selectedMode,
-            onModeSelected: (mode) {
-              setState(() {
-                selectedMode = mode;
-              });
-            },
+            onModeSelected: (mode) => setState(() => selectedMode = mode),
           ),
           Expanded(
             child: MainContent(settings: driveModeSettings[selectedMode]!),
           ),
         ],
       ),
-      bottomNavigationBar: const BottomNavigationBarWidget(currentPage: 'SRT Page'),
-
+      bottomNavigationBar: const BottomNavigationBarWidget(currentPage: 'Fahrmodus'),
     );
   }
 }
