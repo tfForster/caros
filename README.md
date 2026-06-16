@@ -1,39 +1,62 @@
-# test_app
-A template for new flutter applications.
+# CarOS — Vehicle Infotainment System
 
-## Getting Started
+A Flutter-based car infotainment UI built as a portfolio project. Runs natively on Windows and as a web app.
 
-This project is an empty flutter application with a Serverconnection implementation
-and a few custom Widgets.
+**Live Demo:** [caros.benno-klan.com](https://caros.benno-klan.com)
 
-To get started please:
-1. create a new folder with your desired appname (can only contain lowercase letters and '_', must start with lowercase letter) 
-2. cd into it
-3. use the following:
+---
 
-```git
-git clone https://git.eder-gmbh.intern/Eder_GmbH/FlutterTemplate .
+## Features
+
+- **Navigation** — Interactive map (OpenStreetMap + CartoDB Dark Matter), real road routing via OSRM API, tap-to-navigate with road snapping, pulsing location marker
+- **Media** — Radio (AM/FM), USB playback with file picker, Bluetooth audio view
+- **Phone** — Call simulation with dial pad, incoming call demo, call timer
+- **Drive Mode** — Track / Sport / Custom / Default selector with vehicle metrics
+- **Climate** — HVAC controls
+- **Seat Controls** — Heated/vented seats, heated steering wheel
+
+## Tech Stack
+
+- Flutter (Windows + Web)
+- flutter_map + latlong2
+- OpenStreetMap / CartoDB tiles
+- OSRM routing API
+- Docker + nginx (deployment)
+
+## Run locally
+
+```bash
+flutter pub get
+flutter run -d windows
 ```
 
-**Note the . at the end of the expression!**
+## Deploy (Docker)
 
-4. run the included script:
-
-```powershell
-powershell ./rename_project.ps1
+```bash
+docker compose up --build -d
 ```
 
-**Voilà, the app template is now ready!**
+Builds Flutter web release and serves via nginx on port 80.
 
+## Project Structure
 
-## Powershell script overview
+```
+lib/
+  main.dart              # Entry point, window setup
+  config/app.dart        # App-wide constants & design tokens
+  controller/server.dart # HTTP client (localhost:8000)
+  pages/                 # One file per screen
+  widgets/               # Reusable widgets
+  ui/                    # Dialogs and notifications
+```
 
-The above script does the following:
-- names the project and all its mentions like the name of the Folder you created.
-- asks for your:
-    - name 
-    - a title 
-    - first version
-- checks if the parent folder is named according to the flutter app naming conventions
-- creates a new git repository
-- makes the initial commit for you.
+## Notes
+
+Some features are demo simulations — real deployment in a vehicle would use:
+- **Phone:** Bluetooth HFP via BlueZ (Linux)
+- **Audio:** Bluetooth A2DP + AVRCP via BlueZ (Linux)
+- **GPS:** System location API
+
+---
+
+Author: Benno Klan
